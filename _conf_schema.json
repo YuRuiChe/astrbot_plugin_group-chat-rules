@@ -1,0 +1,7 @@
+{
+  "is_regulations": {
+    "description": "群规内容",
+    "type": "string",
+    "hint": "请输入群规内容"
+  }
+}

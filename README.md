@@ -1,1 +1,2 @@
-# astrbot_plugin_group-chat-rules
+可以判断群规是否适合当前场景
+感谢超时空旅行团的各位群友对本项目提供的支持
