@@ -35,9 +35,8 @@ class MyPlugin(Star):
             )
             # 4. 获取回复内容
             reply = llm_response.completion_text
-            reply = reply.replace("*")
             # 5. 发送回复
-            yield event.plain_result(f"{reply}")
+            yield event.plain_result(f"(注意！输出仅做参考！)\n\n{reply}")
         except Exception as e:
             logger.error(f"LLM 调用失败: {e}")
             yield event.plain_result(f"❌ 调用 LLM 时出错: {str(e)}")
