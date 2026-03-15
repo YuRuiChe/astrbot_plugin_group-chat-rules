@@ -34,7 +34,8 @@ class MyPlugin(Star):
                 system_prompt= f"群规如下“{self.is_regulations}” 判断此言论“{prompt}”是否符合群规，如果违反，请输出违反了哪条群规，请用简洁的中文回答我的问题。"
             )
             # 4. 获取回复内容
-            reply = llm_response.completion_text.replace("*")
+            reply = llm_response.completion_text
+            reply = reply.replace("*")
             # 5. 发送回复
             yield event.plain_result(f"{reply}")
         except Exception as e:
