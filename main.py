@@ -31,12 +31,12 @@ class MyPlugin(Star):
             llm_response = await self.context.llm_generate(
                 chat_provider_id=provider_id,
                 prompt=prompt,
-                system_prompt= f"群规如下“{self.is_regulations}” 判断此言论“{prompt}”是否符合群规，如果违反，请输出违反了哪条群规，请用简洁的中文回答我的问题。"
+                system_prompt= f"群规如下“{self.is_regulations}” 判断此言论“{prompt}”是否符合群规，如果违反，请输出“你的发言含有违规内容，违反了第XXX条（要有此条的具体内容）”；如果没有违反，那就输出“没有违反群规”。用简洁的中文回答，不要有多余的输出。"
             )
             # 4. 获取回复内容
             reply = llm_response.completion_text
             # 5. 发送回复
-            yield event.plain_result(f"(注意！输出仅做参考！)\n\n{reply}")
+            yield event.plain_result(f"AI生成，仅做参考\n\n{reply}")
         except Exception as e:
             logger.error(f"LLM 调用失败: {e}")
             yield event.plain_result(f"❌ 调用 LLM 时出错: {str(e)}")
