@@ -1,7 +1,44 @@
 {
+  "llm_provide": {
+    "description": "选择LLM提供商",
+    "type": "string",
+    "_special": "select_provider",
+    "default": ""
+  },
   "is_regulations": {
     "description": "群规内容",
     "type": "string",
     "hint": "请输入群规内容"
+  },
+  "content_review": {
+    "description": "发言检测",
+    "type": "object",
+    "hint": "注意！此设置非常耗费token！",
+    "items": {
+      "open_review": {
+        "description": "是否开启发言检测",
+        "type": "bool",
+        "hint": "是否开启发言检测，需要管理员，若不开启则此嵌套内所有设置均无法使用",
+        "default": false
+      },
+      "withdraw_the_illegal_content": {
+        "description": "是否撤回违规发言",
+        "type": "bool",
+        "hint": "是否撤回违规发言，默认关闭",
+        "default": false
+      },
+      "send_warning_message": {
+        "description": "是否发送警告信息",
+        "type": "bool",
+        "hint": "是否发送警告信息，默认关闭",
+        "default": false
+      },
+      "warning_message": {
+        "description": "警告内容",
+        "type": "string",
+        "hint": "在此设置警告内容",
+        "default": false
+      }
+    }
   }
 }
