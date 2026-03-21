@@ -4,13 +4,18 @@ from astrbot.api import logger
 from astrbot.core import AstrBotConfig
 
 # @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.0.2", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.0.3", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         # 这里可以初始化插件的配置或资源
-        self.llm_provide = config.get("llm_provide", "不选择提供商")
-        self.is_regulations = config.get("is_regulations", "我是群规")
+        # 不要在配置文件里写默认值！！！！！！在这里写默认值！！！！！！（因为这里都是集中到一起的，好找）
+        self.llm_provide = config.get("llm_provide", "")
+        self.is_regulations = config.get("is_regulations", "1、践行社会主义价值观2、坚决不违反法律、道德与纪律")
+        self.open_review = config.get("content_review", {}).get("open_review", False)
+        self.withdraw_the_illegal_content = config.get("content_review", {}).get("withdraw_the_illegal_content", False)
+        self.send_warning_message = config.get("content_review", {}).get("send_warning_message", False)
+        self.warning_message = config.get("content_review", {}).get("warning_message", "你的发言违反了群规！")
 
         if self.llm_provide:
             logger.info(f"插件使用提供商: {self.llm_provide}")

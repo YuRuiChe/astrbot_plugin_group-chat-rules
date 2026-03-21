@@ -2,8 +2,7 @@
   "llm_provide": {
     "description": "选择LLM提供商",
     "type": "string",
-    "_special": "select_provider",
-    "default": ""
+    "_special": "select_provider"
   },
   "is_regulations": {
     "description": "群规内容",
@@ -18,26 +17,22 @@
       "open_review": {
         "description": "是否开启发言检测",
         "type": "bool",
-        "hint": "是否开启发言检测，需要管理员，若不开启则此嵌套内所有设置均无法使用",
-        "default": false
+        "hint": "是否开启发言检测，需要管理员，若不开启则此嵌套内所有设置均无法使用"
       },
       "withdraw_the_illegal_content": {
         "description": "是否撤回违规发言",
         "type": "bool",
-        "hint": "是否撤回违规发言，默认关闭",
-        "default": false
+        "hint": "是否撤回违规发言，默认关闭"
       },
       "send_warning_message": {
         "description": "是否发送警告信息",
         "type": "bool",
-        "hint": "是否发送警告信息，默认关闭",
-        "default": false
+        "hint": "是否发送警告信息，默认关闭"
       },
       "warning_message": {
         "description": "警告内容",
         "type": "string",
-        "hint": "在此设置警告内容",
-        "default": false
+        "hint": "在此设置警告内容"
       }
     }
   }
