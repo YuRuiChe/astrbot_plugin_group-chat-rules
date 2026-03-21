@@ -5,7 +5,7 @@ from astrbot.core import AstrBotConfig
 from astrbot.api.message_components import At, Plain
 
 # @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v16", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v9", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
@@ -59,7 +59,8 @@ class MyPlugin(Star):
         if not self.open_review:
             return
         # 排除机器人自己的消息
-        if event.is_from_self():
+        bot_self_id = self.context.get_bot_self_id()
+        if bot_self_id and str(event.get_sender_id()) == str(bot_self_id):
             return
         # 根据消息类型决定是否回复
         is_private = event.is_private_chat()
@@ -70,6 +71,8 @@ class MyPlugin(Star):
             return
         # 获取消息内容
         message = event.message_str
+        if not message:
+            return
         try:
             # 获取配置文件选择的LLM提供商ID
             provider_id = self.llm_provide
