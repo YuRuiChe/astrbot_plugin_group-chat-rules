@@ -4,7 +4,7 @@ from astrbot.api import logger
 from astrbot.core import AstrBotConfig
 
 # @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v4", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v5", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
@@ -52,7 +52,7 @@ class MyPlugin(Star):
             yield event.plain_result(f"❌ 调用 LLM 时出错: {str(e)}")
 
     @filter.event_message_type(filter.EventMessageType.ALL)
-    async def on_message(self, event: AstrMessageEvent, prompt: str):
+    async def on_message(self, event: AstrMessageEvent, prompt):
         """群规判断"""
         # 检查是否启用
         if self.config.get("open_review", False):
