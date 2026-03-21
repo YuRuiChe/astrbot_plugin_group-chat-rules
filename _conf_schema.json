@@ -33,6 +33,11 @@
         "description": "警告内容",
         "type": "string",
         "hint": "在此设置警告内容"
+      },
+      "violation_limit": {
+        "description": "违规上限",
+        "type": "int",
+        "hint": "在此设置违规次数上限"
       }
     }
   }

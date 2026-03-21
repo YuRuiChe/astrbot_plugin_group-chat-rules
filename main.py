@@ -4,7 +4,7 @@ from astrbot.api import logger
 from astrbot.core import AstrBotConfig
 
 # @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.0.3", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v4", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
@@ -43,10 +43,65 @@ class MyPlugin(Star):
                 prompt=prompt,
                 system_prompt= f"群规如下“{self.is_regulations}” 判断此言论“{prompt}”是否符合群规，如果违反，请输出“你的发言含有违规内容，违反了第XXX条（要有此条的具体内容）”；如果没有违反，那就输出“没有违反群规”。用简洁的中文回答，不要有多余的输出。"
             )
-            # 4. 获取回复内容
+            # 获取回复内容
             reply = llm_response.completion_text
-            # 5. 发送回复
+            # 发送回复
             yield event.plain_result(f"AI生成，仅做参考\n\n{reply}")
+        except Exception as e:
+            logger.error(f"LLM 调用失败: {e}")
+            yield event.plain_result(f"❌ 调用 LLM 时出错: {str(e)}")
+
+    @filter.event_message_type(filter.EventMessageType.ALL)
+    async def on_message(self, event: AstrMessageEvent, prompt: str):
+        """群规判断"""
+        # 检查是否启用
+        if self.config.get("open_review", False):
+            return
+        # 排除机器人自己的消息
+        if event.is_from_self():
+            return
+        # 根据消息类型决定是否回复
+        is_private = event.is_private_chat()
+        is_group = not is_private
+        if is_private and not self.config.get("reply_private", True):
+            return
+        if is_group and not self.config.get("reply_group", True):
+            return
+        # 获取消息内容
+        message = event.message_str
+        # 获取发送者的名字
+        user_name = event.get_sender_name()
+        try:
+            # 获取配置文件选择的LLM提供商ID
+            provider_id = self.llm_provide
+            if not provider_id:
+                yield event.plain_result("❌无法获取 LLM 提供商，请先在 WebUI 中配置 LLM")
+                return
+            logger.info(f"使用提供商: {provider_id}, 用户问题: {prompt}")
+            # 调用 LLM 生成回答
+            llm_response = await self.context.llm_generate(
+                chat_provider_id=provider_id,
+                prompt=prompt,
+                system_prompt=f"群规如下“{self.is_regulations}” 判断此言论“{prompt}”是否符合群规，如果违反，请输出“Y”这个字母；如果没有违反，那就输出“N”这个字母，坚决不要有多余的输出。"
+            )
+            # 获取回复内容
+            reply = llm_response.completion_text
+            # 发送回复
+            if self.config.get("open_review", True):
+                if reply == "Y":
+                    if is_group:
+                        # 群聊：@用户
+                        yield event.chain_result([
+                            Comp.At(qq=event.get_sender_id()),
+                            Comp.Plain(f"{self.warning_message}")
+                        ])
+                    else:
+                        # 私聊：直接回复
+                        yield event.plain_result(reply)
+                else:
+                    return
+            else:
+                return
         except Exception as e:
             logger.error(f"LLM 调用失败: {e}")
             yield event.plain_result(f"❌ 调用 LLM 时出错: {str(e)}")
