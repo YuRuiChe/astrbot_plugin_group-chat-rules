@@ -2,9 +2,10 @@ from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 from astrbot.core import AstrBotConfig
+from astrbot.api.message_components import At, Plain
 
 # @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v6", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v16", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
@@ -55,7 +56,7 @@ class MyPlugin(Star):
     async def on_message(self, event: AstrMessageEvent):
         """群规判断"""
         # 检查是否启用
-        if self.config.get("open_review", False):
+        if not self.open_review:
             return
         # 排除机器人自己的消息
         if event.is_from_self():
@@ -63,9 +64,9 @@ class MyPlugin(Star):
         # 根据消息类型决定是否回复
         is_private = event.is_private_chat()
         is_group = not is_private
-        if is_private and not self.config.get("reply_private", True):
+        if is_private and not self.reply_private:
             return
-        if is_group and not self.config.get("reply_group", True):
+        if is_group and not self.reply_group:
             return
         # 获取消息内容
         message = event.message_str
@@ -89,8 +90,8 @@ class MyPlugin(Star):
                     if is_group:
                         # 群聊：@用户
                         yield event.chain_result([
-                            Comp.At(qq=event.get_sender_id()),
-                            Comp.Plain(f"{self.warning_message}")
+                            At(qq=event.get_sender_id()),
+                            Plain(f"{self.warning_message}")
                         ])
                     else:
                         # 私聊：直接回复
