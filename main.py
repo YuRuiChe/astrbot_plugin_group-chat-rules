@@ -5,7 +5,7 @@ from astrbot.core import AstrBotConfig
 from astrbot.api.message_components import At, Plain
 
 
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.0.15", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.1.0", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
