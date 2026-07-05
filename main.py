@@ -4,13 +4,11 @@ from astrbot.api import logger
 from astrbot.core import AstrBotConfig
 from astrbot.api.message_components import At, Plain
 
-# @register 装饰器用于注册插件，参数依次为：插件名、作者、描述、版本、仓库地址
-@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v15", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
+
+@register("astrbot_plugin_group-chat-rules", "语芮澈", "可以判断群规是否适合当前场景", "v1.0.15", "https://github.com/YuRuiChe/astrbot_plugin_group-chat-rules")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
-        # 这里可以初始化插件的配置或资源
-        # 不要在配置文件里写默认值！！！！！！在这里写默认值！！！！！！（因为这里都是集中到一起的，好找）
         self.llm_provide = config.get("llm_provide", "")
         self.is_regulations = config.get("is_regulations", "1、践行社会主义价值观2、坚决不违反法律、道德与纪律")
 
