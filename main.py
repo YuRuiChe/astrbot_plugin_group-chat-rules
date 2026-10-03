@@ -9,6 +9,7 @@ from astrbot.api.message_components import At, Plain
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
+        # 初始化
         self.llm_provide = config.get("llm_provide", "")
         self.is_regulations = config.get("is_regulations", "1、践行社会主义价值观2、坚决不违反法律、道德与纪律")
 
